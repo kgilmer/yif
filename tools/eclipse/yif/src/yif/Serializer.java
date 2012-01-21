@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,12 @@ public class Serializer {
 
 		Yaml yaml = new Yaml(constructor);
 		
-		return (List<Issue>) yaml.load(file);
+		List<Issue> issues = (List<Issue>) yaml.load(file);
+		
+		if (issues == null) {
+			issues = new ArrayList<Issue>();
+		}
+		
+		return issues;
 	}
 }
