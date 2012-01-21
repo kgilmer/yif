@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Issue Editor"
+            extensions="yml"
+            icon="icons/bug.png"
+            class="yif.editors.Editor"
+            id="yif.editors.Editor">
+      </editor>
+   </extension>
+
+</plugin>
