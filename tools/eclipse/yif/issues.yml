@@ -1,0 +1,9 @@
+- !issue
+  id: 1
+  title: Support date fields in Eclipse editor.
+  complete: false
+  priority: 0
+  tags: []
+  created: 2012-01-21T03:27:55.686Z
+  due: null
+  notes: [Use a date picker widget to select dates.]
