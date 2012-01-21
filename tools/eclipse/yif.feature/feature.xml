@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="yif.feature"
+      label="yif Feature"
+      version="0.1.0.qualifier"
+      provider-name="Ken Gilmer">
+
+   <description>
+      yif - Yaml Issues File
+A facility for simple issue tracking.  Encode project issues
+in a yaml file in the root of a project.  Edit the issues in
+a text editor or other specialized editor.
+Each &apos;issues.yml&apos; file consists of a list of Issue, where issue
+is:
+- !issue
+id: &lt;integer id of issue&gt;
+title: &lt;text title of issue&gt;
+complete: &lt;true or false&gt;
+priority: &lt;integer, bigger is higher priority&gt;
+tags: &lt;list of strings&gt;
+created: &lt;date or null&gt;
+due: &lt;date or null&gt;
+notes: &lt;list of strings&gt;
+An example:
+- !issue
+id: 219
+title: Learn more YAML 2nd
+complete: true
+priority: 10
+tags: [learning, iiy]
+created: 2012-01-17T13:01:33.355Z
+due: null
+notes: [Important to understand YAML notation, Note 2, Here is
+my latest thoughts on the subject.]
+- !issue
+id: 854
+title: Write eclipse editor for issues.yaml
+complete: true
+priority: 10
+tags: [dev tools, iiy]
+created: 2012-01-17T13:01:33.355Z
+due: 2012-02-06T13:01:33.355Z
+notes:
+- write model
+- write editor
+- |
+Note that the &apos;part&apos; property still has a global tag but the
+&apos;wheel&apos; property does not (because the wheel&apos;s runtime class
+is the same as it is defined in the CarWithWheel class).
+The example for the above JavaBean can be found here The preferred
+way to dump a JavaBean is to use Yaml.dumpAs(obj, Tag.TAP). This
+utility is emitting with the block layout and does not emit the
+root global tag with the class name (using implicit !!map tag).
+The preferred way to parse a JavaBean is to use Yaml.loadAs().
+It eliminates the need to cast returned instances to the specified
+class.
+By default standard JavaBean properties and public fields are
+included. BeanAccess.FIELD makes is possible to use private fields
+directly.
+Current editors available:
+-Eclipse
+   </description>
+
+   <copyright>
+      Copyright 2012 Ken Gilmer
+   </copyright>
+
+   <license url="http://www.apache.org/licenses/LICENSE-2.0.txt">
+      Apache License 2.0
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.forms" version="3.5.100" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="yif"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
