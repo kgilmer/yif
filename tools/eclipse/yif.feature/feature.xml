@@ -2,7 +2,7 @@
 <feature
       id="yif.feature"
       label="yif Feature"
-      version="0.1.0.qualifier"
+      version="0.2.0.qualifier"
       provider-name="Ken Gilmer">
 
    <description>
