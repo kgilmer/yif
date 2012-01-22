@@ -7,3 +7,21 @@
   created: 2012-01-21T03:27:55.686Z
   due: null
   notes: [Use a date picker widget to select dates.]
+- !issue
+  id: 1
+  title: Support tags in eclipse editor
+  complete: false
+  priority: 0
+  tags: []
+  created: 2012-01-22T02:05:09.376Z
+  due: null
+  notes: []
+- !issue
+  id: 1
+  title: 'Issue index # does not increment when adding issues'
+  complete: false
+  priority: 10
+  tags: []
+  created: 2012-01-22T02:05:23.027Z
+  due: null
+  notes: []
