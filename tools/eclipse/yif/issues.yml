@@ -1,27 +1,45 @@
 - !issue
   id: 1
   title: Support date fields in Eclipse editor.
-  complete: false
+  complete: true
   priority: 0
-  tags: []
-  created: 2012-01-21T03:27:55.686Z
+  tags: ['']
+  created: 2012-01-20T15:00:00Z
   due: null
   notes: [Use a date picker widget to select dates.]
 - !issue
   id: 1
   title: Support tags in eclipse editor
-  complete: false
+  complete: true
   priority: 0
-  tags: []
-  created: 2012-01-22T02:05:09.376Z
+  tags: ['']
+  created: 2012-01-21T15:00:00Z
   due: null
   notes: []
 - !issue
   id: 1
   title: 'Issue index # does not increment when adding issues'
-  complete: false
+  complete: true
   priority: 10
-  tags: []
-  created: 2012-01-22T02:05:23.027Z
+  tags: ['']
+  created: 2012-01-21T15:00:00Z
   due: null
+  notes: []
+- !issue
+  id: 2
+  title: Command-line editor via python
+  complete: false
+  priority: 0
+  tags: ['']
+  created: 2012-01-27T15:00:00Z
+  due: 2012-02-03T15:00:00Z
+  notes: []
+- !issue
+  id: 3
+  title: git integration with a commit hook that will set defect to complete based on comment.
+  complete: false
+  priority: 0
+  tags: ['']
+  created: 2012-01-27T15:00:00Z
+  due: 2012-02-03T15:00:00Z
   notes: []

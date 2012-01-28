@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/yif.feature_0.2.0.201201211226.jar" id="yif.feature" version="0.2.0.201201211226">
+   <feature url="features/yif.feature_0.3.0.201201282357.jar" id="yif.feature" version="0.3.0.201201282357">
       <category name="yif"/>
    </feature>
    <category-def name="yif" label="yif tools"/>
