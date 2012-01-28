@@ -51,3 +51,18 @@ Current editors available:
 
 - Eclipse
 - Python (shell)
+
+## Shell command syntax
+
+````
+$ ./yif --help
+Usage: yif [(list) | new | close <id> | reopen <id> | note <id>]
+
+Yaml Issue File (yif) handler
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -f FILE, --file=FILE  path to yif file
+  -a, --all             show all rather than filtering completed issues
+````
