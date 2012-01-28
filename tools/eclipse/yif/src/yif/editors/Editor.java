@@ -2,7 +2,13 @@ package yif.editors;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -11,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -31,6 +38,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -55,6 +63,7 @@ import yif.model.Issue;
 public class Editor extends EditorPart {
 
 	private static FormToolkit ftk;
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
 
 	private Composite maincomp;
 	private FileEditorInput input;
@@ -77,6 +86,8 @@ public class Editor extends EditorPart {
 	private String projectName;
 
 	private Section detailSection;
+
+	private Text tagsField;
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {		
@@ -157,6 +168,7 @@ public class Editor extends EditorPart {
 		Section section1 = ftk.createSection(issueListComp, Section.TITLE_BAR);
 		section1.setText("Issue List");
 		section1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
 		issueTable = new TableViewer(ftk.createTable(issueListComp, SWT.BORDER));
 		issueTable.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
 		issueTable.setContentProvider(new IStructuredContentProvider() {
@@ -175,33 +187,43 @@ public class Editor extends EditorPart {
 
 			@Override
 			public Object[] getElements(Object inputElement) {
-				return issues.toArray();
+				ArrayList<Issue> sortedIssues = new ArrayList<Issue>(issues);
+				Collections.sort(sortedIssues, new Comparator<Issue>() {
+
+					@Override
+					public int compare(Issue o1, Issue o2) {
+						if (o1.isComplete())
+							return 1;
+						if (o2.isComplete())
+							return -1;
+						if (o1.getPriority() > o2.getPriority())
+							return 1;
+						else if (o1.getPriority() < o2.getPriority())
+							return -1;
+						return -1;
+					}
+				});
+				
+				return sortedIssues.toArray();
 			}
 		});
 		issueTable.setLabelProvider(new ITableLabelProvider() {
 
 			@Override
-			public void removeListener(ILabelProviderListener listener) {
-				// TODO Auto-generated method stub
-
+			public void removeListener(ILabelProviderListener listener) {				
 			}
 
 			@Override
-			public boolean isLabelProperty(Object element, String property) {
-				// TODO Auto-generated method stub
+			public boolean isLabelProperty(Object element, String property) {				
 				return false;
 			}
 
 			@Override
-			public void dispose() {
-				// TODO Auto-generated method stub
-
+			public void dispose() {				
 			}
 
 			@Override
-			public void addListener(ILabelProviderListener listener) {
-				// TODO Auto-generated method stub
-
+			public void addListener(ILabelProviderListener listener) {				
 			}
 
 			@Override
@@ -216,8 +238,15 @@ public class Editor extends EditorPart {
 
 			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
-				// TODO Auto-generated method stub
-				return null;
+				Issue issue = (Issue) element;
+				ImageRegistry ir = Activator.getDefault().getImageRegistry();
+				if (issue.isComplete())
+					return ir.get(Activator.IMAGE_KEY_ACCEPT);
+				
+				if (issue.getDue() != null && issue.getDue().before(Calendar.getInstance().getTime()))
+					return ir.get(Activator.IMAGE_KEY_CLOCK);
+				
+				return ir.get(Activator.IMAGE_KEY_BULLET_BLUE);
 			}
 		});
 
@@ -238,7 +267,7 @@ public class Editor extends EditorPart {
 		});
 		
 		Composite detailComposite = ftk.createComposite(maincomp, SWT.None);
-		glayout = newMarginlessGridLayout(2, false);
+		glayout = newMarginlessGridLayout(3, false);
 		glayout.marginLeft = 6;
 		detailComposite.setLayout(glayout);
 		detailComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -246,19 +275,20 @@ public class Editor extends EditorPart {
 		detailSection = ftk.createSection(detailComposite, Section.TITLE_BAR);
 		detailSection.setText("");
 		gdata = new GridData(GridData.FILL_HORIZONTAL);
-		gdata.horizontalSpan = 2;
+		gdata.horizontalSpan = 3;
 		detailSection.setLayoutData(gdata);
 		
-		titleField = createTextField("Title", detailComposite);
-		priorityField = createTextField("Priority", detailComposite);
-		createdField = createTextField("Created", detailComposite);
-		dueField = createTextField("Due", detailComposite);
+		titleField = createTextField("Title", Activator.IMAGE_KEY_PAGE, detailComposite);
+		priorityField = createTextField("Priority", Activator.IMAGE_KEY_ASTRISK, detailComposite);
+		tagsField = createTextField("Tags", Activator.IMAGE_KEY_TAG, detailComposite);
+		createdField = createTextField("Created", Activator.IMAGE_KEY_DATE_NEXT, detailComposite);
+		dueField = createTextField("Due", Activator.IMAGE_KEY_DATE_PREVIOUS, detailComposite);
 		completeField = createCheckboxField("Completed", detailComposite);
 
 		notesField = new TableViewer(ftk.createTable(detailComposite, SWT.BORDER));
 		notesField.getTable().setLinesVisible(true);
 		gdata = new GridData(GridData.FILL_BOTH);
-		gdata.horizontalSpan = 2;
+		gdata.horizontalSpan = 3;
 		notesField.getTable().setLayoutData(gdata);
 		notesField.setContentProvider(new IStructuredContentProvider() {
 
@@ -321,6 +351,7 @@ public class Editor extends EditorPart {
 		});
 
 		ftk.createLabel(detailComposite, "");
+		ftk.createLabel(detailComposite, "");
 		Button addNoteButton = ftk.createButton(detailComposite, "Add Note...", SWT.None);
 		addNoteButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		addNoteButton.addSelectionListener(new SelectionListener() {
@@ -377,7 +408,10 @@ public class Editor extends EditorPart {
 				int id = getNextId(issues);
 				i.setId(id);
 				i.setTitle("New Issue " + id);
-				i.setCreated(Calendar.getInstance().getTime());
+				Calendar now = Calendar.getInstance();
+				i.setCreated(now.getTime());
+				now.add(Calendar.DAY_OF_MONTH, 7);
+				i.setDue(now.getTime());
 
 				issues.add(i);
 				dirty = true;
@@ -429,13 +463,16 @@ public class Editor extends EditorPart {
 
 		if (il != null)
 			for (Issue issue : il)
-				if (issue.getId() > id)
+				if (issue.getId() >= id)
 					id = issue.getId() + 1;
 
 		return id;
 	}
 
-	private Text createTextField(String title, Composite detailComposite) {
+	private Text createTextField(String title, String iconKey, Composite detailComposite) {
+		Label imgLabel = ftk.createLabel(detailComposite, "");
+		imgLabel.setImage(Activator.getDefault().getImageRegistry().get(iconKey));
+		
 		ftk.createLabel(detailComposite, title + ": ");
 		Text text = ftk.createText(detailComposite, "", SWT.BORDER_DOT);
 		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -460,7 +497,7 @@ public class Editor extends EditorPart {
 
 		Button text = ftk.createButton(detailComposite, title, SWT.CHECK);
 		GridData gdata = new GridData(GridData.FILL_HORIZONTAL);
-		gdata.horizontalSpan = 2;
+		gdata.horizontalSpan = 3;
 		text.setLayoutData(gdata);
 		text.addSelectionListener(new SelectionListener() {
 
@@ -485,12 +522,23 @@ public class Editor extends EditorPart {
 
 	protected void updateIssue(Issue issue) {
 		issue.setTitle(titleField.getText());
-		// issue.setCreated(createdField.getText());
-		// issue.setDue(due)
+		try {
+			issue.setCreated(sdf.parse(createdField.getText()));
+		} catch (ParseException e) {
+			
+		}
+		
+		try {
+			issue.setDue(sdf.parse(dueField.getText()));
+		} catch (ParseException e) {
+			
+		}
+		
 		issue.setComplete(completeField.getSelection());
 		if (isNotEmpty(priorityField.getText()))
 			issue.setPriority(Integer.parseInt(priorityField.getText()));
-
+		issue.setTags(Arrays.asList(tagsField.getText().split(" ")));
+		
 		issueTable.refresh();
 	}
 
@@ -499,7 +547,7 @@ public class Editor extends EditorPart {
 	}
 
 	protected void renderIssueDetail(Issue issue) {
-		detailSection.setText("Details for #" + issue.getId());
+		detailSection.setText(issue.getId() + " - " + issue.getTitle());
 
 		if (issue.getTitle() != null)
 			titleField.setText(issue.getTitle());
@@ -507,20 +555,34 @@ public class Editor extends EditorPart {
 			titleField.setText("");
 
 		if (issue.getCreated() != null)
-			createdField.setText(issue.getCreated().toString());
+			createdField.setText(sdf.format(issue.getCreated()));
 		else
 			createdField.setText("");
 
 		if (issue.getDue() != null)
-			dueField.setText(issue.getDue().toString());
+			dueField.setText(sdf.format(issue.getDue()));
 		else
 			dueField.setText("");
 
 		priorityField.setText(Integer.toString(issue.getPriority()));
+		tagsField.setText(tagsToString(issue.getTags()));
 
 		completeField.setSelection(issue.isComplete());
 
 		notesField.setInput(issue.getNotes());
+	}
+
+	private String tagsToString(List<String> tags) {
+		StringBuilder sb = new StringBuilder();
+		
+		for (String tag : tags) {
+			if (tag.trim().length() > 0) {
+				sb.append(tag.trim());
+				sb.append(' ');
+			}
+		}
+			
+		return sb.toString().trim();
 	}
 
 	@Override
