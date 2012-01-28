@@ -200,7 +200,8 @@ public class Editor extends EditorPart {
 							return 1;
 						else if (o1.getPriority() < o2.getPriority())
 							return -1;
-						return -1;
+						
+						return o1.getTitle().toUpperCase().compareTo(o2.getTitle().toUpperCase());
 					}
 				});
 				
