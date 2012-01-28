@@ -1,0 +1,75 @@
+#!/usr/bin/python
+#
+# Python shell script for yaml issues file (yif)
+# Copyright 2012 Ken Gilmer
+# Apache 2.0 License (ASL)
+#
+# Version 0.1.0
+#
+# Usage: yif [(list) | new | close <id> | reopen <id> | note <id>]
+# 
+# Yaml Issue File (yif) handler
+# 
+# Options:
+#   --version             show program's version number and exit
+#   -h, --help            show this help message and exit
+#   -f FILE, --file=FILE  path to yif file
+#   -a, --all             show all rather than filtering completed issues
+
+
+import yaml
+import optparse
+import os.path
+
+class Issue(yaml.YAMLObject):
+	yaml_tag = u'!issue'
+	def __init__(self, title, priority, tags, created, due, notes, complete, id):    
+		self.title = title
+		self.priority = priority
+		self.tags = tags
+		self.created = created
+		self.due = due
+		self.notes = notes
+		self.complete = complete
+		self.id = id
+	def __repr__(self):
+		return "%s(title=%r, priority=%r, tags=%r, created=%r, due=%r, notes=%r, complete=%r, id=%r)" % (
+		    self.__class__.__name__, self.title, self.priority, self.tags, self.created, self.due, self.notes, self.complete, self.id)
+         
+         
+def findYIF(options):
+	if options.file:
+		if os.path.isfile(options.file):
+			return file(options.file, 'rw')
+	
+	if os.path.isfile('issues.yml'):
+		return file('issues.yml', 'rw')
+
+ 	raise Exception('Unable to find yif file.')		
+	
+def main():
+	p = optparse.OptionParser(description='Yaml Issue File (yif) handler',
+                                   prog='yif',
+                                   version='yif 0.1.0',
+                                   usage='%prog [options] [(list) | new | close <id> | reopen <id> | note <id>]')
+	p.add_option('--file', '-f', help='path to yif file')
+	p.add_option('--all', '-a', action ='store_true', help='show all rather than filtering completed issues')
+	options, arguments = p.parse_args()
+	
+	if 'list' in arguments or not arguments:
+		issues = yaml.load(findYIF(options))
+		for issue in issues:	
+			if not issue.complete:		
+				print '{0} - {1}'.format(issue.id, issue.title)
+	elif 'new' in arguments:
+		print 'new not implemented'
+	elif 'close' in arguments:
+		print 'close not implemented'
+	elif 'reopen' in arguments:
+		print 'reopen not implemented'
+	elif 'note' in arguments:
+		print 'note not implemented'
+
+if __name__ == '__main__':
+	main()
+
