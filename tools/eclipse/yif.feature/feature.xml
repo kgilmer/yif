@@ -7,11 +7,9 @@
 
    <description>
       yif - Yaml Issues File
-
 A YAML format for a list of issues.  Encode project issues
 in a yaml file in the root of a project.  Edit the issues in
 a text editor or specialized editor.
-
 Each &apos;issues.yml&apos; file consists of a list of Issue, where issue
 is:
 - !issue
@@ -23,7 +21,6 @@ tags: &lt;list of strings&gt;
 created: &lt;date or null&gt;
 due: &lt;date or null&gt;
 notes: &lt;list of strings&gt;
-
 An example:
 - !issue
 id: 219
@@ -50,9 +47,9 @@ notes:
 Note that the &apos;part&apos; property still has a global tag but the
 &apos;wheel&apos; property does not (because the wheel&apos;s runtime class
 ...
-
 Current editors available:
 -Eclipse
+-Python (shell)
    </description>
 
    <copyright>
