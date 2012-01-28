@@ -48,5 +48,6 @@ Note that the 'part' property still has a global tag but the
 ````
 
 Current editors available:
+
 - Eclipse
 - Python (shell)
